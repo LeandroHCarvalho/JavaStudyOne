@@ -5,14 +5,30 @@
  */
 package br.com.treinarinformatica.sakila.model;
 
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author Treinar
  */
-public class Film {
+@Entity
+@Table(name = "film")
+public class Film implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "film_id")
     private Integer id;
+    @Column(name = "title")
     private String title;
+    @Column(name = "description")
     private String description;
+    @Column(name = "release_year")
     private Integer releaseYear;
 
     /**
