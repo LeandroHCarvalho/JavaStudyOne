@@ -40,7 +40,7 @@ public class FilmsTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-       return filmsList.size();
+       return getFilmsList().size();
     }
 
     @Override
@@ -51,12 +51,19 @@ public class FilmsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
        switch(columnIndex) {
-           case 0: return filmsList.get(rowIndex).getId();
-           case 1: return filmsList.get(rowIndex).getTitle();
-           case 2: return filmsList.get(rowIndex).getReleaseYear();
-           case 3: return filmsList.get(rowIndex).getDescription();
+           case 0: return getFilmsList().get(rowIndex).getId();
+           case 1: return getFilmsList().get(rowIndex).getTitle();
+           case 2: return getFilmsList().get(rowIndex).getReleaseYear();
+           case 3: return getFilmsList().get(rowIndex).getDescription();
            default: return null;
        }
+    }
+
+    /**
+     * @return the filmsList
+     */
+    public List<Film> getFilmsList() {
+        return filmsList;
     }
 
    

@@ -6,6 +6,7 @@
 package br.com.treinarinformatica.sakila.gui;
 
 import br.com.treinarinformatica.sakila.exceptions.ServiceException;
+import br.com.treinarinformatica.sakila.model.Film;
 import br.com.treinarinformatica.sakila.service.FilmService;
 import javax.swing.JOptionPane;
 
@@ -16,6 +17,7 @@ import javax.swing.JOptionPane;
 public class FilmsGUI extends javax.swing.JFrame {
 
     private FilmService filmService;
+    private Integer selectedId;
 
     /**
      * Creates new form FilmsGUI
@@ -111,6 +113,11 @@ public class FilmsGUI extends javax.swing.JFrame {
         jPanel1.add(txtReleaseYear, gridBagConstraints);
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -122,9 +129,19 @@ public class FilmsGUI extends javax.swing.JFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnEdit);
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnDelete);
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_END);
@@ -150,6 +167,64 @@ public class FilmsGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+
+        try {
+            Film film = new Film();
+
+            film.setId(this.selectedId);    //
+            film.setTitle(txtTitle.getText());
+            film.setDescription(txtDescription.getText());
+            film.setReleaseYear(Integer.parseInt(txtReleaseYear.getText()));
+
+            if (film.getId() == null) {    //
+                filmService.save(film); //  
+            } else {
+                filmService.update(film);   //
+            }
+
+            this.selectedId = null; //
+
+            tblFilms.setModel(new FilmsTableModel(filmService.listAll()));
+
+            JOptionPane.showMessageDialog(null, "Film saved successfully");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Failed to save film");
+            ex.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        int selectedLine = tblFilms.getSelectedRow();
+        Film selectedFilm = ((FilmsTableModel) tblFilms.getModel()).getFilmsList().get(selectedLine);
+
+        txtTitle.setText(selectedFilm.getTitle());
+        txtDescription.setText(selectedFilm.getDescription());
+        txtReleaseYear.setText(selectedFilm.getReleaseYear().toString());
+
+        jTabbedPane1.setSelectedIndex(0);
+
+        this.selectedId = selectedFilm.getId();
+
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        try {
+            int selectedLine = tblFilms.getSelectedRow();
+            Film selectedFilm = ((FilmsTableModel) tblFilms.getModel()).getFilmsList().get(selectedLine);
+
+            filmService.delete(selectedFilm.getId());
+
+            tblFilms.setModel(new FilmsTableModel(filmService.listAll()));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Failed to delete film");
+        }
+
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
