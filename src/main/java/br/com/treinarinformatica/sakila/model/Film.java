@@ -30,6 +30,14 @@ public class Film implements Serializable {
     private String description;
     @Column(name = "release_year")
     private Integer releaseYear;
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (!(other instanceof Film)) return false;
+        if (this.id == null || ((Film)other).id == null) return false;
+        return this.id.equals(((Film)other).id);
+    }
 
     /**
      * @return the id
